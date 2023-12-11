@@ -10,10 +10,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contact List'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10,
+        clipBehavior: Clip.antiAlias,
+        child: BottomNavigationBar(
+          onTap: (index) {
+            setState(() {
+              selectedIndex = index;
+            });
+          },
+          currentIndex: selectedIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'All',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: 'Favorite',
+            ),
+          ],
+        ),
+      ),
+      body: const Center(
         child: Text('Home'),
       ),
     );
