@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:v_card/pages/form_page.dart';
 
 class HomePage extends StatefulWidget {
   static var routeName = '/home';
@@ -20,11 +21,14 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, FormPage.routeName);
+        },
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomAppBar(
+        padding: EdgeInsets.zero,
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         clipBehavior: Clip.antiAlias,
@@ -35,6 +39,7 @@ class _HomePageState extends State<HomePage> {
             });
           },
           currentIndex: selectedIndex,
+          backgroundColor: Colors.blue.shade100,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
