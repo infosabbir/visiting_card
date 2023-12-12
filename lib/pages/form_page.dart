@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:v_card/models/contact_model.dart';
 
 class FormPage extends StatefulWidget {
   static const String routeName = '/form';
+
   const FormPage({super.key});
 
   @override
@@ -16,6 +18,7 @@ class _FormPageState extends State<FormPage> {
   final companyController = TextEditingController();
   final addressController = TextEditingController();
   final websiteController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,25 +33,111 @@ class _FormPageState extends State<FormPage> {
         ],
       ),
       body: Form(
+        key: formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
           children: [
-            TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.person),
-                labelText: 'Contact Name',
-                filled: true,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.name,
+                controller: nameController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  labelText: 'Contact Name(required)',
+                  filled: true,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This  field must not be empty';
+                  }
+                  if (value.length > 30) {
+                    return 'Name should not be more than 30 chars long';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'This  field must not be empty';
-                }
-                if (value.length > 30) {
-                  return 'Name should not be more than 30 chars long';
-                }
-                return null;
-              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
+                controller: mobileController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.call),
+                  labelText: 'Mobile Number(required)',
+                  filled: true,
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'This  field must not be empty';
+                  }
+                  if (value.length > 20) {
+                    return 'Name should not be more than 20 chars long';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.email),
+                  labelText: 'Email address',
+                  filled: true,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                controller: companyController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.label),
+                  labelText: 'Company Name',
+                  filled: true,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                controller: designationController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.label),
+                  labelText: 'Designation',
+                  filled: true,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: addressController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.location_city_rounded),
+                  labelText: 'Street Address',
+                  filled: true,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: TextFormField(
+                keyboardType: TextInputType.url,
+                controller: websiteController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.web),
+                  labelText: 'Website',
+                  filled: true,
+                ),
+              ),
             ),
           ],
         ),
@@ -56,7 +145,19 @@ class _FormPageState extends State<FormPage> {
     );
   }
 
-  void _saveContact() async {}
+  void _saveContact() async {
+    if (formKey.currentState!.validate()) {
+      final contact = ContactModel(
+        name: nameController.text,
+        mobile: mobileController.text,
+        email: emailController.text,
+        company: companyController.text,
+        designation: designationController.text,
+        address: addressController.text,
+        website: websiteController.text,
+      );
+    }
+  }
 
   @override
   void dispose() {
