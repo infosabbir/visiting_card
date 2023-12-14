@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:v_card/pages/form_page.dart';
+import 'package:v_card/provider/contact_provider.dart';
+import 'package:v_card/utils/helpers.dart';
 
 class HomePage extends StatefulWidget {
   static var routeName = '/home';
@@ -12,6 +15,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  bool isFirst = true;
+
+  @override
+  void didChangeDependencies() {
+    if (isFirst) {
+      Provider.of<ContactProvider>(context, listen: false).getAllContacts();
+    }
+    isFirst = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +65,69 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: const Center(
-        child: Text('Home'),
+      body: Consumer<ContactProvider>(builder: (context, provider, _) {
+        if (provider.contactList.isEmpty) {
+          return const Center(
+            child: Text('Nothing to show here..'),
+          );
+        }
+        return ListView.builder(
+          itemCount: provider.contactList.length,
+          itemBuilder: (context, index) {
+            final contact = provider.contactList[index];
+            return Dismissible(
+              key: UniqueKey(),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                padding: const EdgeInsets.only(right: 20),
+                alignment: FractionalOffset.centerRight,
+                color: Colors.red,
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+              confirmDismiss: _showConfirmationDialog,
+              onDismissed: (direction) async {
+                await provider.deleteContact(contact.id);
+                showMsg(context, 'Deleted');
+              },
+              child: ListTile(
+                title: Text(contact.name),
+                trailing: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    contact.favorite ? Icons.favorite : Icons.favorite_border,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  Future<bool?> _showConfirmationDialog(DismissDirection direction) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Contact'),
+        content: const Text('Are you sure to delete this contact?'),
+        actions: [
+          OutlinedButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('NO'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text('YES'),
+          ),
+        ],
       ),
     );
   }
