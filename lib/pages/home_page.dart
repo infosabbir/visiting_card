@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:v_card/models/contact_model.dart';
+import 'package:v_card/pages/contact_details_page.dart';
 import 'package:v_card/pages/form_page.dart';
 import 'package:v_card/provider/contact_provider.dart';
 import 'package:v_card/utils/helpers.dart';
@@ -93,9 +95,19 @@ class _HomePageState extends State<HomePage> {
                 showMsg(context, 'Deleted');
               },
               child: ListTile(
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  ContactDetailsPage.routeName,
+                  arguments: contact.id,
+                ),
                 title: Text(contact.name),
                 trailing: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    provider.updateContactField(
+                      contact,
+                      tblContactFavorite,
+                    );
+                  },
                   icon: Icon(
                     contact.favorite ? Icons.favorite : Icons.favorite_border,
                   ),

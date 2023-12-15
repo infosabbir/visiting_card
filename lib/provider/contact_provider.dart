@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:v_card/db/db_helper.dart';
 
@@ -21,7 +20,18 @@ class ContactProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<ContactModel> getContactById(int id) => db.getContactById(id);
+
   Future<int> deleteContact(int id) {
     return db.deleteContact(id);
+  }
+
+  Future<void> updateContactField(
+      ContactModel contactModel, String field) async {
+    await db.updateContactField(
+        contactModel.id, {field: contactModel.favorite ? 0 : 1});
+    final index = contactList.indexOf(contactModel);
+    contactList[index].favorite = !contactList[index].favorite;
+    notifyListeners();
   }
 }
