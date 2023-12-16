@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:v_card/models/contact_model.dart';
+import 'package:v_card/pages/form_page.dart';
 import 'package:v_card/utils/constants.dart';
 
 class ScanPage extends StatefulWidget {
@@ -31,6 +33,13 @@ class _ScanPageState extends State<ScanPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan Page'),
+        actions: [
+          TextButton(
+            onPressed:
+                image.isEmpty ? null : _createContactModelFromScannedValues,
+            child: const Text('NEXT'),
+          ),
+        ],
       ),
       body: ListView(
         children: [
@@ -92,6 +101,11 @@ class _ScanPageState extends State<ScanPage> {
                 ),
               ),
             ),
+          if (isScanOver)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(dragInstruction),
+            ),
           Wrap(
             children: lines.map((e) => LineItem(line: e)).toList(),
           ),
@@ -123,7 +137,44 @@ class _ScanPageState extends State<ScanPage> {
   }
 
   _getPropertyValue(String property, String value) {
+    switch (property) {
+      case ContactProperties.name:
+        name = value;
+        break;
+      case ContactProperties.designation:
+        designation = value;
+        break;
+      case ContactProperties.company:
+        company = value;
+        break;
+      case ContactProperties.address:
+        address = value;
+        break;
+      case ContactProperties.email:
+        email = value;
+        break;
+      case ContactProperties.mobile:
+        mobile = value;
+        break;
+      case ContactProperties.website:
+        website = value;
+        break;
+    }
+  }
+
+  void _createContactModelFromScannedValues() {
     //
+    final contact = ContactModel(
+      name: name,
+      mobile: mobile,
+      email: email,
+      address: address,
+      company: company,
+      designation: designation,
+      website: website,
+      image: image,
+    );
+    Navigator.pushNamed(context, FormPage.routeName, arguments: contact);
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:v_card/models/contact_model.dart';
+import 'package:v_card/pages/home_page.dart';
 import 'package:v_card/provider/contact_provider.dart';
 import 'package:v_card/utils/helpers.dart';
 
@@ -22,6 +23,21 @@ class _FormPageState extends State<FormPage> {
   final addressController = TextEditingController();
   final websiteController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  late ContactModel contactModel;
+
+  @override
+  void didChangeDependencies() {
+    contactModel = ModalRoute.of(context)?.settings.arguments as ContactModel;
+    nameController.text = contactModel.name;
+    emailController.text = contactModel.email;
+    mobileController.text = contactModel.mobile;
+    companyController.text = contactModel.company;
+    designationController.text = contactModel.designation;
+    addressController.text = contactModel.address;
+    websiteController.text = contactModel.website;
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,21 +166,20 @@ class _FormPageState extends State<FormPage> {
 
   void _saveContact() async {
     if (formKey.currentState!.validate()) {
-      final contact = ContactModel(
-        name: nameController.text,
-        mobile: mobileController.text,
-        email: emailController.text,
-        company: companyController.text,
-        designation: designationController.text,
-        address: addressController.text,
-        website: websiteController.text,
-      );
+      contactModel.name = nameController.text;
+      contactModel.mobile = mobileController.text;
+      contactModel.email = emailController.text;
+      contactModel.company = companyController.text;
+      contactModel.designation = designationController.text;
+      contactModel.address = addressController.text;
+      contactModel.website = websiteController.text;
+
       Provider.of<ContactProvider>(context, listen: false)
-      .insertContact(contact)
-      .then((rowId) {
-        if(rowId > 0) {
+          .insertContact(contactModel)
+          .then((rowId) {
+        if (rowId > 0) {
           showMsg(context, 'Saved');
-          Navigator.pop(context);
+          Navigator.popUntil(context, ModalRoute.withName(HomePage.routeName));
         }
       });
     }
