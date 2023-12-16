@@ -53,7 +53,7 @@ class _ScanPageState extends State<ScanPage> {
             ],
           ),
           Wrap(
-            children: lines.map((e) => Chip(label: Text(e))).toList(),
+            children: lines.map((e) => LineItem(line: e)).toList(),
           ),
         ],
       ),
@@ -80,5 +80,34 @@ class _ScanPageState extends State<ScanPage> {
       });
       print(lines);
     }
+  }
+}
+
+class LineItem extends StatelessWidget {
+  final String line;
+
+  const LineItem({super.key, required this.line});
+
+  @override
+  Widget build(BuildContext context) {
+    final GlobalKey globalKey = GlobalKey();
+    return LongPressDraggable(
+      data: line,
+      dragAnchorStrategy: childDragAnchorStrategy,
+      feedback: Container(
+        key: globalKey,
+        padding: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+          color: Colors.black45,
+        ),
+        child: Text(
+          line,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+              ),
+        ),
+      ),
+      child: Chip(label: Text(line)),
+    );
   }
 }
