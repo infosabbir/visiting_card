@@ -142,16 +142,21 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   }
 
   Future<void> _openMap(String address) async {
-    final url = 'geo:$address?';
+    String url = '';
+    if (Platform.isAndroid) {
+      url = 'geo:0,0?q=$address';
+    } else {
+      url = 'http://maps.apple.com/?q=$address';
+    }
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
-      showMsg(context, 'Cannot perform this task');
+      showMsg(context, 'Could not perform this operation');
     }
   }
 
   Future<void> _openBrowser(String website) async {
-    final url = 'https:$website?';
+    final url = 'https://$website?';
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
