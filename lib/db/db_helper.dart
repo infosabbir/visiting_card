@@ -7,6 +7,7 @@ class DbHelper {
     $tblContactId integer primary key autoincrement,
     $tblContactName  text,
     $tblContactMobile  text,
+    $tblContactLandLine  text,
     $tblContactEmail  text,
     $tblContactAddress  text,
     $tblContactCompany  text,
@@ -20,9 +21,15 @@ class DbHelper {
     final dbPath = p.join(root, 'contact.db');
     return openDatabase(
       dbPath,
-      version: 1,
+      version: 2,
       onCreate: (db, version) {
         db.execute(_createTableContact);
+      },
+      onUpgrade: (db, oldVersion, newVersion) {
+        if (oldVersion == 1) {
+          db.execute(
+              'alter table $tableContact add column $tblContactLandLine text default ""');
+        }
       },
     );
   }

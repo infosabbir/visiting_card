@@ -2,6 +2,7 @@ const String tableContact = 'tbl_contact';
 const String tblContactId = 'id';
 const String tblContactName = 'name';
 const String tblContactMobile = 'mobile';
+const String tblContactLandLine = 'phone';
 const String tblContactEmail = 'email';
 const String tblContactAddress = 'address';
 const String tblContactWebsite = 'website';
@@ -14,6 +15,7 @@ class ContactModel {
   int id;
   String name;
   String mobile;
+  String landLine;
   String email;
   String company;
   String designation;
@@ -26,6 +28,7 @@ class ContactModel {
     this.id = -1,
     required this.name,
     required this.mobile,
+    this.landLine = '',
     this.email = '',
     this.company = '',
     this.designation = '',
@@ -39,6 +42,7 @@ class ContactModel {
     final map = <String, dynamic>{
       tblContactName: name,
       tblContactMobile: mobile,
+      tblContactId: landLine,
       tblContactEmail: email,
       tblContactCompany: company,
       tblContactDesignation: designation,
@@ -58,6 +62,7 @@ class ContactModel {
         name: map[tblContactName],
         email: map[tblContactEmail],
         mobile: map[tblContactMobile],
+        landLine: map[tblContactLandLine],
         address: map[tblContactAddress],
         company: map[tblContactCompany],
         designation: map[tblContactDesignation],
@@ -68,6 +73,6 @@ class ContactModel {
 
   @override
   String toString() {
-    return 'ContactModel{id: $id, name: $name, mobile: $mobile, email: $email, company: $company, designation: $designation, address: $address, website: $website, favorite: $favorite, image: $image,}';
+    return 'ContactModel{id: $id, name: $name, mobile: $mobile, landLine: $landLine, email: $email, company: $company, designation: $designation, address: $address, website: $website, favorite: $favorite, image: $image}';
   }
 }
