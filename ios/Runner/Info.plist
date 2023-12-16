@@ -2,6 +2,33 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <!-- Handling SMS and Phone Calls -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
+    <!-- Handling Mailto -->
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>mailto</string>
+                </array>
+            </dict>
+        </array>
+        <!-- Handling Geo (Maps) -->
+            <key>LSApplicationQueriesSchemes</key>
+            <array>
+                <string>geo</string>
+            </array>
+        <key>NSAppTransportSecurity</key>
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+            </dict>
+
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need to access your photo library</string>
 	<key>NSCameraUsageDescription</key>
