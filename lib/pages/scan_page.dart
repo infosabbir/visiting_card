@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ScanPage extends StatefulWidget {
@@ -11,6 +14,17 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
+  bool isScanOver = false;
+  List<String> lines = [];
+  String name = '',
+      mobile = '',
+      email = '',
+      address = '',
+      company = '',
+      designation = '',
+      website = '',
+      image = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,5 +57,24 @@ class _ScanPageState extends State<ScanPage> {
     );
   }
 
-  void getImage(ImageSource camera) {}
+  Future<void> getImage(ImageSource source) async {
+    final xFile = await ImagePicker().pickImage(source: source);
+    if (xFile != null) {
+      image = xFile.path;
+      final textRecognizer =
+          TextRecognizer(script: TextRecognitionScript.latin);
+      final recognizedText =
+          await textRecognizer.processImage(InputImage.fromFile(File(image)));
+      final tempList = <String>[];
+      for (var block in recognizedText.blocks) {
+        for (var line in block.lines) {
+          tempList.add(line.text);
+        }
+      }
+      setState(() {
+        lines = tempList;
+        isScanOver = true;
+      });
+    }
+  }
 }
